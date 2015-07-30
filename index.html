@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-
-<head>
+  <head>
     <meta charset="UTF-8">
     <title>Track-map by Adam-Jiang</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,129 +8,51 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-</head>
-
-<body>
+  </head>
+  <body>
     <section class="page-header">
-        <h1 class="project-name">Track-map</h1>
-        <h2 class="project-tagline">GoogleMapApi測試</h2>
-        <a href="https://github.com/Adam-Jiang/Map" class="btn">View on GitHub</a>
+      <h1 class="project-name">Track-map</h1>
+      <h2 class="project-tagline">GoogleMapApi測試</h2>
+      <a href="https://github.com/Adam-Jiang/Map" class="btn">View on GitHub</a>
+      <a href="https://github.com/Adam-Jiang/Map/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/Adam-Jiang/Map/tarball/master" class="btn">Download .tar.gz</a>
     </section>
-    <h1>HTML5 Geolocation距离跟踪器</h1>
-    <p id="status">该浏览器不支持HTML5 Geolocation。</p>
-    <h2>当前位置：</h2>
-    <table border="1">
-        <tr>
-            <td width="40" scope="col">纬度</th>
-                <td width="114" id="latitude">?</td>
-        </tr>
-        <tr>
-            <td>经度</td>
-            <td id="longitude">?</td>
-        </tr>
-        <tr>
-            <td>准确度</td>
-            <td id="accuracy">?</td>
-        </tr>
-    </table>
-    <h4 id="currDist">本次移动距离：0 千米</h4>
-    <h4 id="totalDist">总计移动距离：0 千米</h4>
-    <script type="text/javascript">
-    var totalDistance = 0.0;
-    var lastLat;
-    var lastLong;
 
-    function toRadians(degree) {
-        return this * Math.PI / 180;
-    }
+    <section class="main-content">
+      <h3>
+<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
 
+<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here <a href="https://guides.github.com/features/mastering-markdown/">using GitHub Flavored Markdown</a>, select a template crafted by a designer, and publish. After your page is generated, you can check out the new <code>gh-pages</code> branch locally. If you’re using GitHub for Mac or GitHub for Windows, simply sync your repository and you’ll see the new branch.</p>
 
-    function distance(latitude1, longitude1, latitude2, longitude2) {
-        // R是地球半径（KM）
-        var R = 6371;
+<h3>
+<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
 
-        var deltaLatitude = toRadians(latitude2 - latitude1);
-        var deltaLongitude = toRadians(longitude2 - longitude1);
-        latitude1 = toRadians(latitude1);
-        latitude2 = toRadians(latitude2);
+<p>We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.</p>
 
-        var a = Math.sin(deltaLatitude / 2) *
-            Math.sin(deltaLatitude / 2) +
-            Math.cos(latitude1) *
-            Math.cos(latitude2) *
-            Math.sin(deltaLongitude / 2) *
-            Math.sin(deltaLongitude / 2);
+<h3>
+<a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating pages manually</h3>
 
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c;
-        return d;
-    }
+<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
 
+<h3>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
-    function updateStatus(message) {
-        document.getElementById("status").innerHTML = message;
-    }
+<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
 
-    function loadDemo() {
-        if (navigator.geolocation) {
-            updateStatus("浏览器支持HTML5 Geolocation。");
-            navigator.geolocation.watchPosition(updateLocation, handleLocationError, {
-                maximumAge: 20000
-            });
-        }
-    }
+<h3>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-    function updateLocation(position) {
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        var accuracy = position.coords.accuracy;
+<p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
 
-        document.getElementById("latitude").innerHTML = latitude;
-        document.getElementById("longitude").innerHTML = longitude;
-        document.getElementById("accuracy").innerHTML = accuracy;
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Adam-Jiang/Map">Track-map</a> is maintained by <a href="https://github.com/Adam-Jiang">Adam-Jiang</a>.</span>
 
-        // 如果accuracy的值太大，我们认为它不准确，不用它计算距离
-        if (accuracy >= 500) {
-            updateStatus("这个数据太不靠谱，需要更准确的数据来计算本次移动距离。");
-            return;
-        }
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
 
-        // 计算移动距离
+    </section>
 
-        if ((lastLat !== null) && (lastLong !== null)) {
-            var currentDistance = distance(latitude, longitude, lastLat, lastLong);
-            document.getElementById("currDist").innerHTML =
-                "本次移动距离：" + currentDistance.toFixed(4) + " 千米";
-
-            totalDistance += currentDistance;
-
-            document.getElementById("totalDist").innerHTML =
-                "总计移动距离：" + currentDistance.toFixed(4) + " 千米";
-        }
-
-        lastLat = latitude;
-        lastLong = longitude;
-
-        updateStatus("计算移动距离成功。");
-    }
-
-    function handleLocationError(error) {
-        switch (error.code) {
-            case 0:
-                updateStatus("尝试获取您的位置信息时发生错误：" + error.message);
-                break;
-            case 1:
-                updateStatus("用户拒绝了获取位置信息请求。");
-                break;
-            case 2:
-                updateStatus("浏览器无法获取您的位置信息：" + error.message);
-                break;
-            case 3:
-                updateStatus("获取您位置信息超时。");
-                break;
-        }
-    }
-    </script>
-</body>
-
+  
+  </body>
 </html>
+
