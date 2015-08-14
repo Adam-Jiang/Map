@@ -1,140 +1,136 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Track-map by Adam-Jiang</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body onload="loadDemo()">
-    <section class="page-header">
-      <h1 class="project-name">Track-map</h1>
-      <h2 class="project-tagline">GoogleMapApi測試</h2>
-      <a href="https://github.com/Adam-Jiang/Map" class="btn">View on GitHub</a>
-      <a href="https://github.com/Adam-Jiang/Map/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/Adam-Jiang/Map/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>標題</title>
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/style.css">
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false">
+</script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="main.js"></script>
+</head>
+
+<body>
+
+<div class="wrapper">
     
-    <h1>HTML5 Geolocation距离跟踪器</h1>
-    <p id="status">该浏览器不支持HTML5 Geolocation。</p>
-    <h2>当前位置：</h2>
-    <table border="1">
-        <tr>
-            <td width="40" scope="col">纬度</th>
-                <td width="114" id="latitude">?</td>
-        </tr>
-        <tr>
-            <td>经度</td>
-            <td id="longitude">?</td>
-        </tr>
-        <tr>
-            <td>准确度</td>
-            <td id="accuracy">?</td>
-        </tr>
-    </table>
-    <h4 id="currDist">本次移动距离：0 千米</h4>
-    <h4 id="totalDist">总计移动距离：0 千米</h4>
-    <script type="text/javascript">
-    var totalDistance = 0.0;
-    var lastLat;
-    var lastLong;
+    <header>
+    
+        <div class="left item">
+            <p>DISTANCE</p>
+            <h1>6.32 mi</h1>
+            <div class="face">
+            <img src="images/smile.png" width="24" height="24" alt="good">
+            <span class="txt">good</span>
+            </div>
+        </div>
+        <div class="right">
+            <div class="item borderB">
+                <p>TIME</p>
+                <h2>49:15</h2>
+            </div>
+            <div class="item">
+                <p>CALORIES</p>
+                <h2>821 cal</h2>
+            </div>
+        </div>
+    
+    </header>
+    
+    <div id="googleMap" style="width:100%;height:500px;"></div>
+    
+    <div class="btn-wrap">
+        <a href="#" class="btn1" onclick="geoFindMe()">START</a><a href="#" class="btn2">PAUSE</a><a href="#" id="setBtn" class="btn2">設定</a>
+    </div>
 
-    function toRadians(degree) {
-        return this * Math.PI / 180;
+</div>
+
+<div class="settingBox">
+<form>
+<div class="field">身高：<span class="setin"><input name="" type="text"> 公分</span></div>
+<div class="field">體重：<span class="setin"><input name="" type="text"> 公斤</span></div>
+<div class="field">目標：<span class="setin"><input name="" type="text"> 公里</span></div>
+</form>
+<input name="" type="button" class="btn3" value="確定">
+</div>
+
+<script>
+$(document).ready(function(){
+  $("#setBtn").click(function(){
+  $(".settingBox").fadeToggle();
+  });
+});
+$(document).ready(function(){
+  $(".btn3").click(function(){
+  $(".settingBox").fadeToggle();
+  });
+});
+
+function geoFindMe() {
+    if (!navigator.geolocation) {
+        output.innerHTML = "<p>你的瀏覽器不支援定位</p>";
+        return;
     }
 
+    var watchID = navigator.geolocation.watchPosition(initialize, showError, geoOptions);
 
-    function distance(latitude1, longitude1, latitude2, longitude2) {
-        // R是地球半径（KM）
-        var R = 6371;
-
-        var deltaLatitude = toRadians(latitude2 - latitude1);
-        var deltaLongitude = toRadians(longitude2 - longitude1);
-        latitude1 = toRadians(latitude1);
-        latitude2 = toRadians(latitude2);
-
-        var a = Math.sin(deltaLatitude / 2) *
-            Math.sin(deltaLatitude / 2) +
-            Math.cos(latitude1) *
-            Math.cos(latitude2) *
-            Math.sin(deltaLongitude / 2) *
-            Math.sin(deltaLongitude / 2);
-
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c;
-        return d;
-    }
-
-
-    function updateStatus(message) {
-        document.getElementById("status").innerHTML = message;
-    }
-
-    function loadDemo() {
-        if (navigator.geolocation) {
-            updateStatus("浏览器支持HTML5 Geolocation。");
-            navigator.geolocation.watchPosition(updateLocation, handleLocationError, {
-                maximumAge: 20000
-            });
-        }
-    }
-
-    function updateLocation(position) {
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        var accuracy = position.coords.accuracy;
-
-        document.getElementById("latitude").innerHTML = latitude;
-        document.getElementById("longitude").innerHTML = longitude;
-        document.getElementById("accuracy").innerHTML = accuracy;
-
-        // 如果accuracy的值太大，我们认为它不准确，不用它计算距离
-        if (accuracy >= 500) {
-            updateStatus("这个数据太不靠谱，需要更准确的数据来计算本次移动距离。");
-            return;
-        }
-
-        // 计算移动距离
-
-        if ((lastLat !== null) && (lastLong !== null)) {
-            var currentDistance = distance(latitude, longitude, lastLat, lastLong);
-            document.getElementById("currDist").innerHTML =
-                "本次移动距离：" + currentDistance.toFixed(4) + " 千米";
-
-            totalDistance += currentDistance;
-
-            document.getElementById("totalDist").innerHTML =
-                "总计移动距离：" + currentDistance.toFixed(4) + " 千米";
-        }
-
-        lastLat = latitude;
-        lastLong = longitude;
-
-        updateStatus("计算移动距离成功。");
-    }
-
-    function handleLocationError(error) {
+    function showError(error) {
         switch (error.code) {
-            case 0:
-                updateStatus("尝试获取您的位置信息时发生错误：" + error.message);
+            case error.PERMISSION_DENIED:
+                alert("使用者拒絕應用程式取得地理位置。");
                 break;
-            case 1:
-                updateStatus("用户拒绝了获取位置信息请求。");
+            case error.POSITION_UNAVAILABLE:
+                alert("地理位置無法取得。");
                 break;
-            case 2:
-                updateStatus("浏览器无法获取您的位置信息：" + error.message);
+            case error.TIMEOUT:
+                alert("取得地理位置超過時限。");
                 break;
-            case 3:
-                updateStatus("获取您位置信息超时。");
+            case error.UNKNOWN_ERROR:
+                alert("未知的錯誤。");
                 break;
         }
     }
-    </script>
 
-  
-  </body>
+    var geoOptions = {
+        enableHighAccuracy: true, //啟用高精準
+        maximumAge: 0, //上一次取得之位置資訊的有效期限,預設為0,單位毫秒
+        timeout: 27000 //超過此時間仍未取得位置資訊,將會觸發錯誤事件
+    };
+
+
+    function initialize(position) {
+
+        var myCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        var stavanger = new google.maps.LatLng(25.023056,121.505278);
+        var myOptions = {
+            center: myCenter,
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        //google.maps.Map(要綁定地圖的DOM元素,地圖的參數)
+        var map = new google.maps.Map(document.getElementById("googleMap"), myOptions);
+
+        //Marker標記位置
+        var marker = new google.maps.Marker({
+            position: myCenter,
+            map: map
+        });
+        //marker.setMap(map); 與map:map一樣
+
+        var myTrip = [myCenter,myCenter];
+        var flightPath = new google.maps.Polyline({
+            path: myTrip, //座標點陣列
+            strokeColor: "#aeaeae",
+            strokeOpacity: 0.8,
+            strokeWeight: 2
+        });
+        flightPath.setMap(map);
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+    }
+}
+
+</script>
+</body>
 </html>
-
